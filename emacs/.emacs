@@ -380,6 +380,10 @@
 (global-set-key (kbd "C-c f") 'helm-projectile-find-file)
 
 ;; blogging using hugo
-(with-eval-after-load 'ox
-  (require 'ox-hugo))
+(use-package ox-hugo
+  :ensure t            ;Auto-install the package from Melpa (optional)
+  :after ox)
 
+;; mac switch meta key
+(setq mac-option-modifier 'meta)
+(setq mac-command-modifier 'hyper)
