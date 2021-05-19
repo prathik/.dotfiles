@@ -20,7 +20,7 @@
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
+   '(expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -68,7 +68,7 @@
 
 (projectile-mode +1)
 
-(setq projectile-project-search-path '("~/Git/go-jek/" "~/Git/prathik/"))
+(setq projectile-project-search-path '("~/Git/go-jek/" "~/Git/prathik/" "~/Git/go-jek/supply-trackers/"))
 
 ;; helm-projective-integration
 (require 'helm-projectile)
@@ -82,6 +82,11 @@
 
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
+
+;; org writing
+;; this file has all the writing ideas put into it
+;; writing workflow: capture ideas -> write outline -> write first draft -> get feedback -> review document -> publish
+(setq org-writing-ideas-file "/Users/prathikrajendran/writing/ideas.org")
 
 ;; org gtd setup
 (setq org-directory "/Users/prathikrajendran/GetThingsDone/")
@@ -97,6 +102,9 @@
 (setq org-capture-templates '(("t" "Todo [inbox]" entry
                                (file+headline inbox-file "Tasks")
                                "* TODO %i%? [0%]")
+			      ("i" "Writing Idea" entry
+			       (file+headline org-writing-ideas-file "Ideas")
+			       "* TODO %i%?")
                               ("T" "Tickler" entry
                                (file+headline tickler-file "Tickler")
                                "* TODO %i%? \nDEADLINE: %t")))
@@ -165,7 +173,7 @@
 (global-set-key (kbd "C-c r t") #'org-roam-tag-add)
 
 ;; productivity key bindings
-(global-set-key (kbd "<f5>") (lambda() (interactive)(find-file "~/work.org")))
+(global-set-key (kbd "<f5>") (lambda() (interactive)(find-file org-writing-ideas-file)))
 (global-set-key (kbd "<f6>") (lambda() (interactive)(find-file inbox-file)))
 (global-set-key (kbd "<f7>") (lambda() (interactive)(find-file gtd-file)))
 
@@ -199,14 +207,10 @@
   (global-display-line-numbers-mode))
 
 ;; avy
-(global-set-key (kbd "C-:") 'avy-goto-char)
-(global-set-key (kbd "C-'") 'avy-goto-char-2)
+(global-set-key (kbd "C-;") 'avy-goto-char-2)
 (global-set-key (kbd "M-g f") 'avy-goto-line)
 (global-set-key (kbd "M-g e") 'avy-goto-word-0)
 (global-set-key (kbd "M-g w") 'avy-goto-word-1)
-
-;; undo tree
-(global-undo-tree-mode)
 
 (setq inhibit-startup-message t) 
 (setq initial-scratch-message nil)
