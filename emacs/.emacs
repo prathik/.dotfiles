@@ -68,7 +68,13 @@
 
 (projectile-mode +1)
 
-(setq projectile-project-search-path '("~/Git/go-jek/" "~/Git/prathik/" "~/Git/go-jek/supply-trackers/"))
+(defun valid-git-dir (x) (not (or (string= x ".") (string= x ".."))))
+
+(defun folder-names () (seq-filter 'valid-git-dir (directory-files "~/Git/")))
+
+(defun add-path (v) (concat "~/Git/" v))
+
+(setq projectile-project-search-path (mapcar 'add-path (folder-names)))
 
 ;; helm-projective-integration
 (require 'helm-projectile)
@@ -116,10 +122,6 @@
 
 (setq org-agenda-custom-commands 
       '(("o" "At the office" tags-todo "@office"
-         ((org-agenda-overriding-header "Office")))))
-
-(setq org-agenda-custom-commands 
-      '(("o" "At the office" tags-todo "@office"
          ((org-agenda-overriding-header "Office")
           (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))))
 
@@ -149,13 +151,9 @@
   ;; multiple next steps
   (interactive)
   (end-of-line)
-  (insert (concat "\n" (make-string (+ 1 (current-heading-level (line-beginning-position) 0)) ?*) " TODO "))
+  (org-insert-todo-heading-respect-content t)
+  (org-shiftmetaright)
   (end-of-line))
-
-(defun current-heading-level (position count)
-  ;; find the current heading level for a TODO
-  ;; ** TODO x -> would return 2
-  (if (eq 42 (char-after position)) (current-heading-level (+ 1 position) (+ 1 count)) count))
 
 (add-hook 'org-mode-hook
   (lambda ()
@@ -390,4 +388,7 @@
 
 ;; mac switch meta key
 (setq mac-option-modifier 'meta)
-(setq mac-command-modifier 'hyper)
+(setq mac-command-modifier 'super)
+
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
