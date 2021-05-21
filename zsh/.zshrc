@@ -139,4 +139,7 @@ alias python='python3'
 #                        Hop between recent directories                       #
 ###############################################################################
 alias redi='cd $(z | tr -s " " | cut -d" " -f2 | tac | fzf)'
+alias hs='history | sort | uniq | fzf'
+
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+

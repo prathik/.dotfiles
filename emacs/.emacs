@@ -57,8 +57,9 @@
 ;; theme
 (load-theme 'tango-dark t)
 
+;; Check https://github.com/tonsky/FiraCode on install instructions
 (set-face-attribute 'default nil
-                :family "Monaco" :height 180 :weight 'normal)
+                :family "Fira Code" :height 180 :weight 'normal)
 
 ;; projectile
 (use-package projectile
@@ -392,3 +393,4 @@
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
+
