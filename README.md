@@ -15,3 +15,7 @@ Run `stow emacs` for example to link all the emacs dotfiles.
 I generally prefer the dotfiles to either be auto install OR come packed with instructions on how to install any dependencies. This ensures that my environment can be replicated across my computers.
 
 Each of the dotfiles are separated by the software they are relevante to, that is emacs dotfiles will be under the folder emacs.
+
+### Emacs
+
+Please ensure `prathik/custom-elisp` repository is cloned to your home directory.
