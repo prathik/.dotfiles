@@ -20,7 +20,7 @@
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
+   '(graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -36,9 +36,17 @@
   (package-refresh-contents))
 
 ; install the missing packages
-(dolist (package '(avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm))
+(dolist (package (butlast package-selected-packages 1))
   (unless (package-installed-p package)
     (package-install package)))
+
+(use-package graphviz-dot-mode
+  :ensure t
+  :config
+  (setq graphviz-dot-indent-width 4))
+
+(use-package company-graphviz-dot
+  )
 
 ;; helm
 (helm-mode 1)
@@ -53,6 +61,8 @@
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+
+(global-set-key (kbd "C-c f") 'helm-projectile-find-file)
 
 ;; theme
 (load-theme 'tango-dark t)
@@ -380,7 +390,6 @@
 (require 'find-file-in-project)
 
 (setq ffip-use-rust-fd t)
-(global-set-key (kbd "C-c f") 'helm-projectile-find-file)
 
 ;; blogging using hugo
 (use-package ox-hugo
@@ -392,5 +401,19 @@
 (setq mac-command-modifier 'super)
 
 (use-package expand-region
+  :ensure t
   :bind ("C-=" . er/expand-region))
 
+;; Exec puml
+;; Build the png for all the plantuml files present
+(defun files () (directory-files default-directory))
+
+(defun str-puml (x) (when (> (length x) 3) (string= (substring x -4 nil) "puml")))
+
+(defun puml-files ()
+  (mapcar (lambda (c) (concat (concat "plantuml " default-directory) c))
+	  (seq-filter 'str-puml (files))))
+
+(defun build-puml ()
+  (interactive)
+  (dolist (file (puml-files)) (shell-command file)))
