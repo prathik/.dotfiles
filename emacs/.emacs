@@ -20,7 +20,7 @@
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
+   '(company-graphviz-dot which-key smartparens rainbow-delimiters graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -35,7 +35,9 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
-; install the missing packages
+(setq use-package-always-ensure t)
+
+					; install the missing packages
 (dolist (package (butlast package-selected-packages 1))
   (unless (package-installed-p package)
     (package-install package)))
@@ -44,9 +46,6 @@
   :ensure t
   :config
   (setq graphviz-dot-indent-width 4))
-
-(use-package company-graphviz-dot
-  )
 
 ;; helm
 (helm-mode 1)
@@ -69,7 +68,7 @@
 
 ;; Check https://github.com/tonsky/FiraCode on install instructions
 (set-face-attribute 'default nil
-                :family "Fira Code" :height 180 :weight 'normal)
+                    :family "Fira Code" :height 180 :weight 'normal)
 
 ;; projectile
 (use-package projectile
@@ -99,11 +98,6 @@
 
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
-
-;; org writing
-;; this file has all the writing ideas put into it
-;; writing workflow: capture ideas -> write outline -> write first draft -> get feedback -> review document -> publish
-(setq org-writing-ideas-file "/Users/prathikrajendran/writing/ideas.org")
 
 ;; org-roam setup
 (setq org-roam-directory "~/org-roam")
@@ -279,9 +273,12 @@
 ;; company yas integration
 (global-set-key (kbd "C-c y") 'company-yasnippet)
 
-(require 'keyfreq)
-(keyfreq-mode 1)
-(keyfreq-autosave-mode 1)
+(use-package keyfreq
+  :ensure t
+  :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
+
 
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -302,10 +299,13 @@
 (global-unset-key (kbd "<M-down>"))
 
 ;; Backup into temp
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+      backup-by-copying t    ; Don't delink hardlinks
+      version-control t      ; Use version numbers on backups
+      delete-old-versions t  ; Automatically delete excess backups
+      kept-new-versions 20   ; how many of the newest versions to keep
+      kept-old-versions 5    ; and how many of the old
+      )
 
 (global-visual-line-mode t)
 (global-disable-mouse-mode)
@@ -342,3 +342,28 @@
 (add-to-list 'load-path "~/custom-elisp")
 (require 'exec-plantuml)
 (require 'org-gtd)
+
+(use-package rainbow-delimiters
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+
+(use-package smartparens
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'smartparens-mode))
+
+(add-hook 'prog-mode-hook 'electric-pair-mode)
+
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+(use-package which-key
+  :config
+  (add-hook 'after-init-hook 'which-key-mode))
+
+(use-package ace-window
+  :bind ("M-o" . ace-window)
+  :config
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+
