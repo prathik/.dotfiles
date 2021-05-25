@@ -20,7 +20,7 @@
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(which-key smartparens rainbow-delimiters graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
+   '(writegood-mode feebleline which-key smartparens rainbow-delimiters graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -109,12 +109,6 @@
 (global-set-key (kbd "C-c r r") #'org-roam-buffer-toggle-display)
 (global-set-key (kbd "C-c r b") #'org-roam-switch-to-buffer)
 (global-set-key (kbd "C-c r t") #'org-roam-tag-add)
-
-;; productivity key bindings
-(global-set-key (kbd "<f5>") (lambda() (interactive)(find-file org-writing-ideas-file)))
-(global-set-key (kbd "<f6>") (lambda() (interactive)(find-file inbox-file)))
-(global-set-key (kbd "<f7>") (lambda() (interactive)(find-file gtd-file)))
-
 
 ;; active Org-babel languages
 (org-babel-do-load-languages
@@ -367,11 +361,8 @@
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
-(defun mac-toggle-max-window ()
-  (interactive)
-  (set-frame-parameter
-   nil
-   'fullscreen
-   (if (frame-parameter nil 'fullscreen)
-       nil
-     'fullboth)))
+(use-package writegood-mode
+  :bind ("C-c g" . writegood-mode)
+  :config
+  (add-to-list 'writegood-weasel-words "actionable"))
+
