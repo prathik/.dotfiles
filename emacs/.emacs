@@ -13,7 +13,7 @@
    '("2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3" "c433c87bd4b64b8ba9890e8ed64597ea0f8eb0396f4c9a9e01bd20a04d15d358" "79586dc4eb374231af28bbc36ba0880ed8e270249b07f814b0e6555bdcb71fab" default))
  '(line-move-visual nil)
  '(org-agenda-files
-   '("/Users/prathikrajendran/GetThingsDone/gtd.org" "/Users/prathikrajendran/GetThingsDone/habits.org" "/Users/prathikrajendran/GetThingsDone/inbox.org" "/Users/prathikrajendran/GetThingsDone/someday.org" "/Users/prathikrajendran/GetThingsDone/tickler.org"))
+   '("~/GetThingsDone/gtd.org" "~/GetThingsDone/habits.org" "~/GetThingsDone/inbox.org" "~/GetThingsDone/someday.org" "~/GetThingsDone/tickler.org"))
  '(org-enforce-todo-dependencies nil)
  '(org-modules
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
@@ -125,10 +125,10 @@
 
 ;; plantuml
 (setq org-plantuml-jar-path
-      (expand-file-name "/Users/prathikrajendran/plantuml.jar"))
+      (expand-file-name "~/plantuml.jar"))
 
 ;; plantuml non org
-(setq plantuml-jar-path "/Users/prathikrajendran/plantuml.jar")
+(setq plantuml-jar-path "~/plantuml.jar")
 (setq plantuml-default-exec-mode 'jar)
 
 
@@ -269,6 +269,10 @@
 
 (use-package keyfreq
   :ensure t
+  :init
+  (setq keyfreq-excluded-commands '(disable-mouse--handle
+				    self-insert-command
+				    org-self-insert-command))
   :config
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1))
