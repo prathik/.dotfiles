@@ -139,12 +139,10 @@
   (global-display-line-numbers-mode))
 
 ;; avy
-(global-set-key (kbd "C-;") 'avy-goto-char-2)
-(global-set-key (kbd "M-g f") 'avy-goto-line)
+(global-set-key (kbd "C-;") 'avy-goto-char)
+(global-set-key (kbd "C-'") 'avy-goto-line)
 (global-set-key (kbd "M-g e") 'avy-goto-word-0)
 (global-set-key (kbd "M-g w") 'avy-goto-word-1)
-(global-set-key (kbd "M-n") 'avy-goto-word-0-below)
-(global-set-key (kbd "M-p") 'avy-goto-word-0-above)
 
 (setq inhibit-startup-message t) 
 (setq initial-scratch-message nil)
@@ -371,4 +369,3 @@
   :bind ("C-c g" . writegood-mode)
   :config
   (add-to-list 'writegood-weasel-words "actionable"))
-
