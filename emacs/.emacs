@@ -20,7 +20,7 @@
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(writegood-mode feebleline which-key smartparens rainbow-delimiters graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
+   '(command-log-mode writegood-mode feebleline which-key smartparens rainbow-delimiters graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -140,9 +140,12 @@
 
 ;; avy
 (global-set-key (kbd "C-;") 'avy-goto-char)
-(global-set-key (kbd "C-'") 'avy-goto-line)
-(global-set-key (kbd "M-g e") 'avy-goto-word-0)
+(global-set-key (kbd "C-'") 'avy-goto-word-0)
 (global-set-key (kbd "M-g w") 'avy-goto-word-1)
+
+(setq avy-orders-alist
+      '((avy-goto-char . avy-order-closest)
+        (avy-goto-word-0 . avy-order-closest)))
 
 (setq inhibit-startup-message t) 
 (setq initial-scratch-message nil)
@@ -369,3 +372,5 @@
   :bind ("C-c g" . writegood-mode)
   :config
   (add-to-list 'writegood-weasel-words "actionable"))
+
+(use-package command-log-mode)
