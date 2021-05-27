@@ -31,7 +31,7 @@
  ;; If there is more than one, they won't work right.
  )
 
-; fetch the list of packages available 
+; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
 
@@ -155,11 +155,16 @@
 (add-hook 'after-init-hook 'global-company-mode)
 
 ;; lsp settings
-(require 'lsp-mode)
-(add-hook 'go-mode-hook #'lsp-deferred)
-(add-hook 'sh-mode-hook #'lsp-deferred)
-(add-hook 'c++-mode-hook #'lsp)
-(add-hook 'c-mode-hook #'lsp)
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "s-l")
+  :hook ((go-mode . lsp)
+	 (sh-mode . lsp)
+	 (c-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
 
 ;; disable file watcher for performance
 (setq lsp-enable-file-watchers nil)
@@ -313,7 +318,7 @@
 
 ;; Org sort entire buffer
 (defun org-sort-buffer ()
-  "go to the top of the buffer and sort the file"
+  "Go to the top of the buffer and sort the file"
   (interactive)
   (beginning-of-buffer)
   (org-sort))
@@ -374,3 +379,13 @@
   (add-to-list 'writegood-weasel-words "actionable"))
 
 (use-package command-log-mode)
+
+(use-package hydra
+  :init
+  (defhydra hydra-zoom (global-map "C-c s")
+  "scroll"
+  ("j" scroll-up-command "scroll up")
+  ("k" scroll-down-command "scroll down")
+  ("l" beginning-of-buffer "start")
+  ("h" end-of-buffer "end")
+  ("u" avy-goto-char "goto" :color blue)))
