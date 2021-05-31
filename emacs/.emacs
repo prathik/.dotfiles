@@ -139,13 +139,16 @@
   (global-display-line-numbers-mode))
 
 ;; avy
-(global-set-key (kbd "C-;") 'avy-goto-char)
-(global-set-key (kbd "C-'") 'avy-goto-word-0)
-(global-set-key (kbd "M-g w") 'avy-goto-word-1)
-
-(setq avy-orders-alist
+(use-package avy
+  :bind (("C-;" . avy-goto-char)
+	 ("C-'" . avy-goto-line)
+	 ("M-g e" . avy-goto-word-0)
+	 ("M-g w" . avy-goto-word-1))
+  :init
+  (setq avy-orders-alist
       '((avy-goto-char . avy-order-closest)
-        (avy-goto-word-0 . avy-order-closest)))
+        (avy-goto-word-0 . avy-order-closest))))
+
 
 (setq inhibit-startup-message t) 
 (setq initial-scratch-message nil)
@@ -382,10 +385,21 @@
 
 (use-package hydra
   :init
-  (defhydra hydra-zoom (global-map "C-c s")
-  "scroll"
-  ("j" scroll-up-command "scroll up")
-  ("k" scroll-down-command "scroll down")
-  ("l" beginning-of-buffer "start")
-  ("h" end-of-buffer "end")
-  ("u" avy-goto-char "goto" :color blue)))
+  (defhydra hydra-zoom (global-map "s-b")
+    "scroll"
+    ("j" scroll-up-command "scroll up")
+    ("k" scroll-down-command "scroll down")
+    ("l" beginning-of-buffer "start")
+    ("h" end-of-buffer "end")
+    ("d" xref-find-definitions "definition")
+    ("f" xref-pop-marker-stack "back")
+    ("r" lsp-find-references "references")
+    ("g" avy-goto-char "goto")))
+
+(global-set-key (kbd "<f5>") (lambda () (interactive) (load-file (buffer-file-name))))
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(require 'ox-beamer)
+
+(add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode t)))
