@@ -143,3 +143,5 @@ alias hs='history | sort | uniq | fzf'
 
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 
+# emacs client alias
+alias e='emacsclient -nw'
