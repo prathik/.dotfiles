@@ -20,7 +20,7 @@
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(command-log-mode writegood-mode feebleline which-key smartparens rainbow-delimiters graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal org-roam helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
+   '(benchmark-init command-log-mode writegood-mode feebleline which-key smartparens rainbow-delimiters graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -37,7 +37,13 @@
 
 (setq use-package-always-ensure t)
 
-					; install the missing packages
+(use-package benchmark-init
+  :ensure t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
+;; install the missing packages
 (dolist (package (butlast package-selected-packages 1))
   (unless (package-installed-p package)
     (package-install package)))
@@ -98,17 +104,6 @@
 
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
-
-;; org-roam setup
-(setq org-roam-directory "~/org-roam")
-(add-hook 'after-init-hook 'org-roam-mode)
-(setq org-roam-completion-system 'helm)
-
-(global-set-key (kbd "C-c r i") #'org-roam-insert)
-(global-set-key (kbd "C-c r f") #'org-roam-find-file)
-(global-set-key (kbd "C-c r r") #'org-roam-buffer-toggle-display)
-(global-set-key (kbd "C-c r b") #'org-roam-switch-to-buffer)
-(global-set-key (kbd "C-c r t") #'org-roam-tag-add)
 
 ;; active Org-babel languages
 (org-babel-do-load-languages
@@ -400,6 +395,7 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(require 'ox-beamer)
-
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode t)))
+
+;; start emacs server if not running
+(server-start)
