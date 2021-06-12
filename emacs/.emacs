@@ -22,7 +22,7 @@
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key smartparens rainbow-delimiters graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
+   '(lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key smartparens rainbow-delimiters graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -137,13 +137,13 @@
 
 ;; avy
 (use-package avy
-  :bind (("C-;" . avy-goto-char)
+  :bind (("C-;" . avy-goto-char-timer)
 	 ("C-'" . avy-goto-line)
 	 ("M-g e" . avy-goto-word-0)
-	 ("M-g w" . avy-goto-word-1))
+	 ("M-g c" . avy-goto-word-1))
   :init
   (setq avy-orders-alist
-      '((avy-goto-char . avy-order-closest)
+	'((avy-goto-char . avy-order-closest)
         (avy-goto-word-0 . avy-order-closest))))
 
 
@@ -380,6 +380,10 @@
 
 (use-package command-log-mode)
 
+(use-package transpose-frame)
+
+(use-package lua-mode)
+
 (use-package hydra
   :init
   (defhydra hydra-zoom (global-map "s-b")
@@ -398,6 +402,14 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode t)))
+
+;; from https://stackoverflow.com/a/12790410/1737080
+(defun org-mode-is-intrusive ()
+  ;; Make something work in org-mode:
+  ;; (local-unset-key (kbd "something I use"))
+  (local-unset-key (kbd "C-'"))
+  )
+(add-hook 'org-mode-hook 'org-mode-is-intrusive)
 
 ;; start emacs server if not running
 (server-start)
