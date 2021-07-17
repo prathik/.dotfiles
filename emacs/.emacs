@@ -15,14 +15,16 @@
  '(display-line-numbers-type 'visual)
  '(line-move-visual nil)
  '(org-agenda-files
-   '("~/GetThingsDone/gtd.org" "~/GetThingsDone/habits.org" "~/GetThingsDone/inbox.org" "~/GetThingsDone/someday.org" "~/GetThingsDone/tickler.org"))
+   '("~/GetThingsDone/gtd.org" "~/GetThingsDone/habits.org" "~/GetThingsDone/inbox.org" "~/GetThingsDone/someday.org" "~/GetThingsDone/tickler.org" "~/GetThingsDone/waiting.org"))
+ '(org-agenda-start-with-follow-mode nil)
  '(org-enforce-todo-dependencies nil)
+ '(org-indent-mode-turns-on-hiding-stars nil)
  '(org-modules
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key smartparens rainbow-delimiters graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode paredit magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
+   '(keyfreq helm-descbinds lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -138,13 +140,11 @@
 ;; avy
 (use-package avy
   :bind (("C-;" . avy-goto-char-timer)
-	 ("C-'" . avy-goto-line)
-	 ("M-g e" . avy-goto-word-0)
-	 ("M-g c" . avy-goto-word-1))
+	 ("C-'" . avy-goto-word-1))
   :init
   (setq avy-orders-alist
 	'((avy-goto-char . avy-order-closest)
-        (avy-goto-word-0 . avy-order-closest))))
+        (avy-goto-word-1 . avy-order-closest))))
 
 
 (setq inhibit-startup-message t) 
@@ -349,18 +349,6 @@
 (require 'exec-plantuml)
 (require 'org-gtd)
 
-(use-package rainbow-delimiters
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-
-(use-package smartparens
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'smartparens-mode))
-
-(add-hook 'prog-mode-hook 'electric-pair-mode)
-
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
@@ -372,11 +360,6 @@
   :bind ("M-o" . ace-window)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
-
-(use-package writegood-mode
-  :bind ("C-c g" . writegood-mode)
-  :config
-  (add-to-list 'writegood-weasel-words "actionable"))
 
 (use-package command-log-mode)
 
@@ -401,8 +384,6 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode t)))
-
 ;; from https://stackoverflow.com/a/12790410/1737080
 (defun org-mode-is-intrusive ()
   ;; Make something work in org-mode:
@@ -411,5 +392,11 @@
   )
 (add-hook 'org-mode-hook 'org-mode-is-intrusive)
 
+(require 'misc)
+(global-set-key (kbd "M-f") 'forward-to-word)
+
+(use-package helm-descbinds
+  :init
+  (helm-descbinds-mode))
 ;; start emacs server if not running
 (server-start)
