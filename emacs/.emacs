@@ -24,7 +24,7 @@
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(keyfreq helm-descbinds lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse helm-lsp yaml-mode treemacs-icons-dired treemacs-magit treemacs-projectile treemacs multiple-cursors ox-reveal helm-xref xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window golden-ratio avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag helm-ag projectile-ripgrep flx-ido helm-rg helm-projectile projectile solarized-theme darcula-theme helm ##))
+   '(counsel keyfreq lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse yaml-mode multiple-cursors ox-reveal xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag projectile-ripgrep flx-ido projectile solarized-theme darcula-theme ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -57,21 +57,14 @@
   :config
   (setq graphviz-dot-indent-width 4))
 
-;; helm
-(helm-mode 1)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(setq helm-M-x-fuzzy-match t)
-
-(global-set-key (kbd "C-x b") 'helm-mini)
-(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-(setq helm-buffers-fuzzy-matching t
-      helm-recentf-fuzzy-match    t)
-
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-
-(global-set-key (kbd "C-c f") 'helm-projectile-find-file)
+(use-package counsel
+  :init
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  :bind
+  ("C-s" . swiper-isearch)
+  ("C-r" . swiper-isearch-backward))
 
 ;; theme
 (load-theme 'tango-dark t)
@@ -96,9 +89,6 @@
 
 (setq projectile-project-search-path (mapcar 'add-path (folder-names)))
 
-;; helm-projective-integration
-(require 'helm-projectile)
-(helm-projectile-on)
 
 ;; backup settings
 (setq backup-directory-alist
@@ -181,92 +171,6 @@
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-
-;; treemacs
-(use-package treemacs
-  :ensure t
-  :defer t
-  :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  :config
-  (progn
-    (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
-          treemacs-deferred-git-apply-delay      0.5
-          treemacs-directory-name-transformer    #'identity
-          treemacs-display-in-side-window        t
-          treemacs-eldoc-display                 t
-          treemacs-file-event-delay              5000
-          treemacs-file-extension-regex          treemacs-last-period-regex-value
-          treemacs-file-follow-delay             0.2
-          treemacs-file-name-transformer         #'identity
-          treemacs-follow-after-init             t
-          treemacs-git-command-pipe              ""
-          treemacs-goto-tag-strategy             'refetch-index
-          treemacs-indentation                   2
-          treemacs-indentation-string            " "
-          treemacs-is-never-other-window         nil
-          treemacs-max-git-entries               5000
-          treemacs-missing-project-action        'ask
-          treemacs-move-forward-on-expand        nil
-          treemacs-no-png-images                 nil
-          treemacs-no-delete-other-windows       t
-          treemacs-project-follow-cleanup        nil
-          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-position                      'left
-          treemacs-read-string-input             'from-child-frame
-          treemacs-recenter-distance             0.1
-          treemacs-recenter-after-file-follow    nil
-          treemacs-recenter-after-tag-follow     nil
-          treemacs-recenter-after-project-jump   'always
-          treemacs-recenter-after-project-expand 'on-distance
-          treemacs-show-cursor                   nil
-          treemacs-show-hidden-files             t
-          treemacs-silent-filewatch              nil
-          treemacs-silent-refresh                nil
-          treemacs-sorting                       'alphabetic-asc
-          treemacs-space-between-root-nodes      t
-          treemacs-tag-follow-cleanup            t
-          treemacs-tag-follow-delay              1.5
-          treemacs-user-mode-line-format         nil
-          treemacs-user-header-line-format       nil
-          treemacs-width                         35
-          treemacs-workspace-switch-cleanup      nil)
-
-    ;; The default width and height of the icons is 22 pixels. If you are
-    ;; using a Hi-DPI display, uncomment this to double the icon size.
-    ;;(treemacs-resize-icons 44)
-
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode 'always)
-    (pcase (cons (not (null (executable-find "git")))
-                 (not (null treemacs-python-executable)))
-      (`(t . t)
-       (treemacs-git-mode 'deferred))
-      (`(t . _)
-       (treemacs-git-mode 'simple))))
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
-
-(use-package treemacs-projectile
-  :after (treemacs projectile)
-  :ensure t)
-
-(use-package treemacs-icons-dired
-  :after (treemacs dired)
-  :ensure t
-  :config (treemacs-icons-dired-mode))
-
-(use-package treemacs-magit
-  :after (treemacs magit)
-  :ensure t)
 
 ;; windmove
 (when (fboundp 'windmove-default-keybindings)
@@ -395,8 +299,5 @@
 (require 'misc)
 (global-set-key (kbd "M-f") 'forward-to-word)
 
-(use-package helm-descbinds
-  :init
-  (helm-descbinds-mode))
 ;; start emacs server if not running
 (server-start)
