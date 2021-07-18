@@ -24,7 +24,7 @@
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(counsel keyfreq lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse yaml-mode multiple-cursors ox-reveal xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag projectile-ripgrep flx-ido projectile solarized-theme darcula-theme ##))
+   '(hydra counsel keyfreq lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse yaml-mode multiple-cursors ox-reveal xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag projectile-ripgrep flx-ido projectile solarized-theme darcula-theme ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -63,6 +63,8 @@
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
   :bind
+  ("M-x" . counsel-M-x)
+  ("C-x C-f" . counsel-find-file)
   ("C-s" . swiper-isearch)
   ("C-r" . swiper-isearch-backward))
 
