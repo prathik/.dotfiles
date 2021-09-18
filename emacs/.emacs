@@ -13,7 +13,6 @@
    '("0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75" "2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3" "c433c87bd4b64b8ba9890e8ed64597ea0f8eb0396f4c9a9e01bd20a04d15d358" "79586dc4eb374231af28bbc36ba0880ed8e270249b07f814b0e6555bdcb71fab" default))
  '(display-line-numbers 'visual)
  '(display-line-numbers-type 'visual)
- '(electric-pair-mode t)
  '(line-move-visual nil)
  '(org-agenda-files
    '("~/GetThingsDone/gtd.org" "~/GetThingsDone/habits.org" "~/GetThingsDone/inbox.org" "~/GetThingsDone/someday.org" "~/GetThingsDone/tickler.org" "~/GetThingsDone/waiting.org"))
@@ -21,12 +20,21 @@
  '(org-enforce-todo-dependencies nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
  '(org-modules
-   '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
+   '(ol-bbdb
+     ol-bibtex
+     ol-docview
+     ol-eww
+     ol-gnus
+     org-habit
+     ol-info
+     ol-irc
+     ol-mhe
+     ol-rmail ol-w3m))
  '(org-reverse-note-order t)
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(color-identifiers-mode dimmer hydra counsel keyfreq lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse yaml-mode multiple-cursors ox-reveal xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag projectile-ripgrep flx-ido projectile solarized-theme darcula-theme ##))
+   '(parinfer-rust-mode smartparens color-identifiers-mode dimmer hydra counsel keyfreq lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse yaml-mode multiple-cursors ox-reveal xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag projectile-ripgrep flx-ido projectile solarized-theme darcula-theme ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -303,9 +311,6 @@
   )
 (add-hook 'org-mode-hook 'org-mode-is-intrusive)
 
-(require 'misc)
-(global-set-key (kbd "M-f") 'forward-to-word)
-
 ;; start emacs server if not running
 (server-start)
 
@@ -317,4 +322,42 @@
   (dimmer-configure-which-key)
   (dimmer-mode t))
 
-(global-set-key (kbd "C-x s") (lambda () (interactive) (save-some-buffers t)))
+(global-set-key
+ (kbd "C-x s")
+ (lambda ()
+   (interactive)
+   (save-some-buffers t)))
+
+(setq visible-bell t)
+
+(use-package smartparens
+  :init
+  (bind-key "C-M-f" #'sp-forward-sexp smartparens-mode-map)
+  (bind-key "C-M-b" #'sp-backward-sexp smartparens-mode-map)
+  (bind-key "C-)" #'sp-forward-slurp-sexp smartparens-mode-map)
+  (bind-key "C-(" #'sp-backward-slurp-sexp smartparens-mode-map)
+  (bind-key "M-)" #'sp-forward-barf-sexp smartparens-mode-map)
+  (bind-key "M-(" #'sp-backward-barf-sexp smartparens-mode-map)
+  (bind-key "C-S-s" #'sp-splice-sexp)
+  (bind-key "C-M-<backspace>" #'backward-kill-sexp)
+  (bind-key "C-M-S-<SPC>" (lambda () (interactive) (mark-sexp -1)))
+
+  :config
+  (smartparens-global-mode t)
+
+  (sp-pair "'" nil :actions :rem)
+  (sp-pair "`" nil :actions :rem)
+  (setq sp-highlight-pair-overlay nil))
+
+;; enable auto insert mode
+(auto-insert-mode t)
+
+;; plantuml support for auto insert
+(add-to-list
+ 'auto-insert-alist
+ '(("\\.puml\\'" . "Plantuml File") . ["template.puml"]))
+
+(use-package parinfer-rust-mode
+  :hook emacs-lisp-mode
+  :init
+  (setq parinfer-rust-auto-download t))
