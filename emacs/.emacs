@@ -20,21 +20,12 @@
  '(org-enforce-todo-dependencies nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
  '(org-modules
-   '(ol-bbdb
-     ol-bibtex
-     ol-docview
-     ol-eww
-     ol-gnus
-     org-habit
-     ol-info
-     ol-irc
-     ol-mhe
-     ol-rmail ol-w3m))
+   '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
  '(org-reverse-note-order t)
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(package-selected-packages
-   '(parinfer-rust-mode smartparens color-identifiers-mode dimmer hydra counsel keyfreq lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse yaml-mode multiple-cursors ox-reveal xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag projectile-ripgrep flx-ido projectile solarized-theme darcula-theme ##))
+   '(powerline parinfer-rust-mode smartparens color-identifiers-mode dimmer hydra counsel keyfreq lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse yaml-mode multiple-cursors ox-reveal xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag projectile-ripgrep flx-ido projectile solarized-theme darcula-theme ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
@@ -361,3 +352,7 @@
   :hook emacs-lisp-mode
   :init
   (setq parinfer-rust-auto-download t))
+
+(use-package powerline
+  :init
+  (powerline-default-theme))
