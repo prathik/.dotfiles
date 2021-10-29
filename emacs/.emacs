@@ -23,18 +23,18 @@
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
  '(org-reverse-note-order t)
  '(org-startup-folded nil)
- '(org-startup-indented t)
+ '(org-startup-indented nil)
  '(package-selected-packages
-   '(powerline parinfer-rust-mode smartparens color-identifiers-mode dimmer hydra counsel keyfreq lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse yaml-mode multiple-cursors ox-reveal xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag projectile-ripgrep flx-ido projectile solarized-theme darcula-theme ##))
+   '(parinfer-rust-mode smartparens color-identifiers-mode dimmer hydra counsel keyfreq lua-mode transpose-frame ox-gfm benchmark-init command-log-mode writegood-mode feebleline which-key graphviz-dot-mode expand-region plantuml-mode ox-hugo agda2-mode find-file-in-project disable-mouse yaml-mode multiple-cursors ox-reveal xref yasnippet-snippets yasnippet company haskell-mode free-keys undo-tree nyan-mode guru-mode ace-window avy use-package lsp-mode clojure-mode-extra-font-locking clojure-mode cider go-mode magit exec-path-from-shell ripgrep ag projectile-ripgrep flx-ido projectile solarized-theme darcula-theme ##))
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(word-wrap t)
  '(yas-global-mode t))
-(custom-set-faces
+(custom-set-faces)
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ 
 
 ; fetch the list of packages available
 (unless package-archive-contents
@@ -110,6 +110,7 @@
  '(;; other Babel languages
    (shell . t)
    (plantuml . t)
+   (scheme . t)
    (dot . t)))
 
 (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
@@ -129,17 +130,17 @@
 ;; magit
 (global-set-key (kbd "C-x g") 'magit-status)
 
-(when (version<= "26.0.50" emacs-version )
+(when (version<= "26.0.50" emacs-version)
   (global-display-line-numbers-mode))
 
 ;; avy
 (use-package avy
   :bind (("C-;" . avy-goto-char-timer)
-	 ("C-'" . avy-goto-word-1))
+         ("C-'" . avy-goto-word-1))
   :init
   (setq avy-orders-alist
-	'((avy-goto-char . avy-order-closest)
-        (avy-goto-word-1 . avy-order-closest))))
+        '((avy-goto-char . avy-order-closest)
+          (avy-goto-word-1 . avy-order-closest))))
 
 
 (setq inhibit-startup-message t) 
@@ -155,8 +156,8 @@
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "s-l")
   :hook ((go-mode . lsp)
-	 (sh-mode . lsp)
-	 (c-mode . lsp)
+         (sh-mode . lsp)
+         (c-mode . lsp)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
@@ -188,8 +189,8 @@
   :ensure t
   :init
   (setq keyfreq-excluded-commands '(disable-mouse--handle
-				    self-insert-command
-				    org-self-insert-command))
+                                    self-insert-command
+                                    org-self-insert-command))
   :config
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1))
@@ -219,8 +220,8 @@
       version-control t      ; Use version numbers on backups
       delete-old-versions t  ; Automatically delete excess backups
       kept-new-versions 20   ; how many of the newest versions to keep
-      kept-old-versions 5    ; and how many of the old
-      )
+      kept-old-versions 5)    ; and how many of the old
+      
 
 
 (global-visual-line-mode t)
@@ -236,7 +237,7 @@
 (global-set-key (kbd "C-x x") 'previous-buffer)
 (global-set-key (kbd "C-x y") 'next-buffer)
 (add-hook 'org-mode-hook (lambda ()
-			   (local-set-key (kbd "C-c s") 'org-sort-buffer)))
+                           (local-set-key (kbd "C-c s") 'org-sort-buffer)))
 (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
 (require 'find-file-in-project)
 
@@ -298,8 +299,8 @@
 (defun org-mode-is-intrusive ()
   ;; Make something work in org-mode:
   ;; (local-unset-key (kbd "something I use"))
-  (local-unset-key (kbd "C-'"))
-  )
+  (local-unset-key (kbd "C-'")))
+  
 (add-hook 'org-mode-hook 'org-mode-is-intrusive)
 
 ;; start emacs server if not running
@@ -353,6 +354,17 @@
   :init
   (setq parinfer-rust-auto-download t))
 
-(use-package powerline
-  :init
-  (powerline-default-theme))
+(load (expand-file-name "~/.quicklisp/slime-helper.el"))
+;; Replace "sbcl" with the path to your implementation
+(setq inferior-lisp-program "sbcl")
+
+(require 'ox-beamer)
+
+(defun increment-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
+
+(global-set-key (kbd "C-c +") 'increment-number-at-point)
