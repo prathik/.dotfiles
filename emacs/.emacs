@@ -183,7 +183,7 @@
   (windmove-default-keybindings))
 
 ;; company yas integration
-(global-set-key (kbd "C-c y") 'company-yasnippet)
+(global-set-key (kbd "C-c y") 'yas/expand)
 
 (use-package keyfreq
   :ensure t
@@ -259,6 +259,7 @@
 (add-to-list 'load-path "~/custom-elisp")
 (require 'exec-plantuml)
 (require 'org-gtd)
+(require 'org-table-incr)
 
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -344,10 +345,20 @@
 ;; enable auto insert mode
 (auto-insert-mode t)
 
-;; plantuml support for auto insert
+;; Expansion on templates
+(defun my/autoinsert-yas-expand ()
+  "Replace text in yasnippet template."
+  (yas-expand-snippet (buffer-string) (point-min) (point-max)))
+
+;; plantuml auto insert
 (add-to-list
  'auto-insert-alist
  '(("\\.puml\\'" . "Plantuml File") . ["template.puml"]))
+
+;; Beamer presentation in org-mode template
+(add-to-list
+ 'auto-insert-alist
+ '(("\\.lec\\.org\\'" . "Lecture Presentation") . ["lecture.org" my/autoinsert-yas-expand]))
 
 (use-package parinfer-rust-mode
   :hook emacs-lisp-mode
@@ -359,12 +370,3 @@
 (setq inferior-lisp-program "sbcl")
 
 (require 'ox-beamer)
-
-(defun increment-number-at-point ()
-  (interactive)
-  (skip-chars-backward "0-9")
-  (or (looking-at "[0-9]+")
-      (error "No number at point"))
-  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
-
-(global-set-key (kbd "C-c +") 'increment-number-at-point)
